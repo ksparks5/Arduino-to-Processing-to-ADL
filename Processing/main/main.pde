@@ -109,7 +109,7 @@ public void setup() {
     serialport = 0;
   }
   else if (OSname.equals("Windows XP") || OSname.equals("Windows 7")) {
-    serialport = 1;
+    serialport = 0;
   }
 
   String portName = Serial.list()[serialport]; // Pick Serial Port to comunicate over (From Above List printed to screen)
