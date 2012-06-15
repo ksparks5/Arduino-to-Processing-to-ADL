@@ -24,9 +24,12 @@ boolean STOP = 0;  //STOP = 1 if Stop signal 'Z' has been received
 int val = 0;              // stores the current state of SENSOR pin
 byte val_low = 0;          // stores low 8 bits of val
 byte val_high = 0;        // stores high 8 bits of val
+byte time_high = 0;        //stores high 8 bits of time value
+byte time_low = 0;        //stores low 8 bits of time value
 int inByte = 0;           // incoming serial byte
 int numAve = 0;           // number of readings averaged together
 int ave[3];              // array to hold readings 
+unsigned long time;      //time in milliseconds since the program started.
 
 // CUSTOM FUNCTIONS
 void lightOn() {
@@ -73,7 +76,7 @@ void loop() {
       // transmitting data over serial
     }
 
-    while (numAve <3) {
+    while (numAve < 3) {
       collectData();
       delay(300);
       //Serial.println("numAve <3");
@@ -92,13 +95,19 @@ void loop() {
       // Should I also send the standard deviation of these measurements?
       // What about changing the number of measurements that are averaged?
       
+      time = millis();
+      time_high = highByte(time);
+      time_low = lowByte(time);
+      
       val_high = highByte(val);
       val_low = lowByte(val);
+     
       //Serial.println(int(val_high));  // For Debugging
       //Serial.print(int(val_low));     // For Debugging
       Serial.write(val_high);
       Serial.write(val_low);
-      
+      Serial.write(time_high);
+      Serial.write(time_low);
       numAve = 0; // reset counter
     }
 
