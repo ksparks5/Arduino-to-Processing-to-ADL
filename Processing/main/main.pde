@@ -188,12 +188,12 @@ void serialEvent(Serial myport) {
     serialCount++;
     // println("SerialCount = " +serialCount);      // For Debugging
     if (serialCount > 3) {             // if we have 4 bytes:
-      val_high = serialInArray[0];     // The byte that was recieved first 
-      // is the first 8 bits of val
-      val_low = serialInArray[1];      // The byte that was recieved second
-      // is the second 8 bits of val
-      time_high = serialInArray[2]; //First 8 bits of time
-      time_low = serialInArray[3];  //Second 8 bits of time
+      time_high = serialInArray[0];     // The byte that was recieved first 
+      // is the first 8 bits of time
+      time_low = serialInArray[1];      // The byte that was recieved second
+      // is the second 8 bits of time
+      val_high = serialInArray[2]; //First 8 bits of val
+      val_low = serialInArray[3];  //Second 8 bits of val
       //println("time_high = " + time_high + "time_low = " + time_low);     // For Debugging
       
       val = val_high << 8 | val_low;   // Place the first 8 bits in val_high 
