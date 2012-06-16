@@ -182,8 +182,8 @@ class GUI {
       file.println("#");
       file.println("#");
       file.println("# DATA");
-      file.println("# Temp \t Voltage");
-      file.println("# Celcius \t Volts");
+      file.println("# Temp \t Voltage \t Time");
+      file.println("# Celcius \t Volts \t mS");
     } 
     else if (gotName == true) { // we must rename the file
       rename = true;

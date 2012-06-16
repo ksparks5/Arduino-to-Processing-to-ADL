@@ -41,7 +41,7 @@ import java.io.File;
 int bgcolor = 155;            // Background Color
 int xpos = 1;                 // horizontal position of the graph
 Serial myPort;                // the serial port
-int[] serialInArray = new int[2]; //where we'll put what we receive
+int[] serialInArray = new int[4]; //where we'll put what we receive
 int serialCount = 0;          // a count of how many bytes we have recieved
 int val_high;                 // First Part of Received int
 int val_low;                  // Second Part of Received int
@@ -56,6 +56,9 @@ String voltVal;               // The string version of variable "volt"
 float temp;                   // the temperature converted from voltage
                               // measured in celcius
 PrintWriter file;             // Used to Write to file
+int time_high;                // First part of time Int
+int time_low;                 // Second part of time int
+int time;                     // Full time int
 
 
 String OSname = System.getProperty("os.name");  // Identify Operating System
@@ -184,20 +187,21 @@ void serialEvent(Serial myport) {
     serialInArray[serialCount] = inByte;
     serialCount++;
     // println("SerialCount = " +serialCount);      // For Debugging
-    if (serialCount > 1) {             // if we have 2 byte:
+    if (serialCount > 3) {             // if we have 4 bytes:
       val_high = serialInArray[0];     // The byte that was recieved first 
       // is the first 8 bits of val
       val_low = serialInArray[1];      // The byte that was recieved second
       // is the second 8 bits of val
-      
-      // println("val_high = " + val_high + "val_low = " + val_low);     // For Debugging
+      time_high = serialInArray[2]; //First 8 bits of time
+      time_low = serialInArray[3];  //Second 8 bits of time
+      //println("time_high = " + time_high + "time_low = " + time_low);     // For Debugging
       
       val = val_high << 8 | val_low;   // Place the first 8 bits in val_high 
                                         // before the last 8 bits in val_low
                                         // to make val
-     
+     time = time_high << 8 | time_low;
       //println(int(val));             // For Debugging 
-      
+      //println(time);                  //for Debugging
       volt = mapDouble(val, 0, 1023, 0.00, 5.00); //Change the range of val from 0-1023
                                                   // to 0.00-5.00 to be a meaningful quantity (voltage)
       // println(volt);      // For Debugging
@@ -228,7 +232,7 @@ public void clipboardCheck() {
 
     /* Begin Writing Temp Data to File */
     try {
-      file.println(volt2temp(volt) + "\t" + volt);     // If Start Signal "X" has been recieved write
+      file.println(volt2temp(volt) + "\t" + volt + "\t" + time);     // If Start Signal "X" has been recieved write
     } 
     catch (NullPointerException ex) {   // no data to write to file... 
       println("Cannot write to file, no data to write.");
