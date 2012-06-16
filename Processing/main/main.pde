@@ -45,9 +45,6 @@ int[] serialInArray = new int[2]; //where we'll put what we receive
 int serialCount = 0;          // a count of how many bytes we have recieved
 int val_high;                 // First Part of Received int
 int val_low;                  // Second Part of Received int
-int time_high;                // First part of time Int
-int time_low;                 // Second part of time int
-int time;                     // Full time int
 int val;                      // Full Received int
 boolean firstContact = false; // whether we've heard from the microcontroller
 String clipped;               // Stores Contents of the Clipboard
@@ -187,13 +184,12 @@ void serialEvent(Serial myport) {
     serialInArray[serialCount] = inByte;
     serialCount++;
     // println("SerialCount = " +serialCount);      // For Debugging
-    if (serialCount > 3) {             // if we have 4 bytes:
+    if (serialCount > 1) {             // if we have 2 byte:
       val_high = serialInArray[0];     // The byte that was recieved first 
       // is the first 8 bits of val
       val_low = serialInArray[1];      // The byte that was recieved second
       // is the second 8 bits of val
-      time_high = serialInArray[2];
-      time_low = serialInArray[3];
+      
       // println("val_high = " + val_high + "val_low = " + val_low);     // For Debugging
       
       val = val_high << 8 | val_low;   // Place the first 8 bits in val_high 
@@ -201,8 +197,6 @@ void serialEvent(Serial myport) {
                                         // to make val
      
       //println(int(val));             // For Debugging 
-      time = time_high << 8 | time_low;
-      println(int(time));  //for debugging
       
       volt = mapDouble(val, 0, 1023, 0.00, 5.00); //Change the range of val from 0-1023
                                                   // to 0.00-5.00 to be a meaningful quantity (voltage)
@@ -234,7 +228,7 @@ public void clipboardCheck() {
 
     /* Begin Writing Temp Data to File */
     try {
-      file.println(volt2temp(volt) + "\t" + volt + time);     // If Start Signal "X" has been recieved write
+      file.println(volt2temp(volt) + "\t" + volt);     // If Start Signal "X" has been recieved write
     } 
     catch (NullPointerException ex) {   // no data to write to file... 
       println("Cannot write to file, no data to write.");
