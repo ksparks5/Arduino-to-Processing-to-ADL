@@ -93,49 +93,61 @@ public void setup() {
   // This scheme is an object "myPort" 
   // Should Get Filename from ADL
   cp.copyString("Not X");                    // Replace contents of Clipboard with "Not X"
-  getFileName(); //get name of file
+  output = createWriter("testing01.txt");
+  output.println("# temp = x3 * pow(v,3) + x2 * pow(v,2) + x1 * v + x0");
+  output.println("# x0 = " + x0 );
+  output.println("# x1 = " + x1 );
+  output.println("# x2 = " + x2 );
+  output.println("# x3 = " + x3 );
+  output.println("# temperature measurements taken approximately every 300ms");
+  output.println("# temperature measurements given in units of degrees celcius");
+  output.println("#");
+  output.println("#");
+  output.println("# DATA");
+  output.println("# Temp \t Voltage \t Time");
+  output.println("# Celcius \t Volts \t mS");
   light_isOn = false;
 } 
 
-/**********************/
-/****    getFileName()    ****/
-/**********************/
-
-public void getFileName() {
-  boolean received = false;
-  char letters[];
-  String nameOfFile;
-  println("please type in file name");
-  while (!received) {
-    if (keyPressed) {
-      if (key == '\n') {
-        received = true;
-        nameOfFile = new String(letters);
-        if (nameOfFile.equals(null)) {
-          nameOfFile = "Untitled";
-        }
-        output = createWriter(nameOfFile + ".txt");
-        println("filename accepted = " + nameOfFile + ".txt");
-        output.println("# temp = x3 * pow(v,3) + x2 * pow(v,2) + x1 * v + x0");
-        output.println("# x0 = " + x0 );
-        output.println("# x1 = " + x1 );
-        output.println("# x2 = " + x2 );
-        output.println("# x3 = " + x3 );
-        output.println("# temperature measurements taken approximately every 300ms");
-        output.println("# temperature measurements given in units of degrees celcius");
-        output.println("#");
-        output.println("#");
-        output.println("# DATA");
-        output.println("# Temp \t Voltage \t Time");
-        output.println("# Celcius \t Volts \t mS");
-        println("finished adding header");
-      }
-      else {
-        letters[] = append(letters, key);
-      }
-    }
-  }
-}
+///**********************/
+///****    getFileName()    ****/  Ended up not using this because the program would not wait for input
+///**********************/
+//
+//public void getFileName() {
+//  boolean received = false;
+//  char letters[] = null;
+//  String nameOfFile;
+//  println("please type in file name");
+//  while (received==false) {
+//    if (keyPressed) {
+//      if (key == '\n') {
+//        received = true;
+//        nameOfFile = new String(letters);
+//        if (nameOfFile.equals(null)) {
+//          nameOfFile = "Untitled";
+//        }
+//        output = createWriter(nameOfFile + ".txt");
+//        println("filename accepted = " + nameOfFile + ".txt");
+//        output.println("# temp = x3 * pow(v,3) + x2 * pow(v,2) + x1 * v + x0");
+//        output.println("# x0 = " + x0 );
+//        output.println("# x1 = " + x1 );
+//        output.println("# x2 = " + x2 );
+//        output.println("# x3 = " + x3 );
+//        output.println("# temperature measurements taken approximately every 300ms");
+//        output.println("# temperature measurements given in units of degrees celcius");
+//        output.println("#");
+//        output.println("#");
+//        output.println("# DATA");
+//        output.println("# Temp \t Voltage \t Time");
+//        output.println("# Celcius \t Volts \t mS");
+//       println("finished adding header");
+//     }
+//     else {
+//       letters = append(letters, key);
+//     }
+//   }
+// }
+//}
 
 
 /**********************/
@@ -218,9 +230,10 @@ public void clipboardCheck() {
   clipped = cp.pasteString();            // Get contents of Clipboard and store them in Clipped
   println(clipped);                      // Print Contents of Clipboard to screen (For Debugging)
   if (clipped.equals("X")) {             // If Signal "X" recieved from ADL (Through Clipboard)
-    if(!light_isOn){
+    if (!light_isOn) {
       lightOn(); 
-      light_isOn = true; }
+      light_isOn = true;
+    }
     try {                                // Try writing data
       output.println(volt2temp(volt) + "\t" + volt + "\t" + time);     // If Start Signal "X" has been recieved write
     } 
@@ -243,22 +256,23 @@ public void clipboardCheck() {
   }
   else {
     delay(300);                         // Give it 0.3s and then test clipboard again.
-    println("chose no action based on clipboard")
-    }
+    println("chose no action based on clipboard");
   }
+  delay(1000);
+}
 
 
-  /*******************************/
-  /****  CUSTOM FUNCTIONS  *******/
-  /*******************************/
+/*******************************/
+/****  CUSTOM FUNCTIONS  *******/
+/*******************************/
 
-  /*  VOLT2TEMP
-   */
-  public double volt2temp(float v) {
-    double temp;
-    temp = x3 * pow(v, 3) + x2 * pow(v, 2) + x1 * v + x0;
-    return temp;
-  }
+/*  VOLT2TEMP
+ */
+public double volt2temp(float v) {
+  double temp;
+  temp = x3 * pow(v, 3) + x2 * pow(v, 2) + x1 * v + x0;
+  return temp;
+}
 
 
 /*  MAPDOUBLE
