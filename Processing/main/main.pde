@@ -78,10 +78,10 @@ GUI gui;                        // Declare new GUI object
  manual Constants
  */
 
-final double x3 = -8.8608;
-final double x2 = 85.7174;
-final double x1 = -290.8986;
-final double x0 = 409.0631;
+final double x3 = 0.049739;
+final double x2 = 0.068603;
+final double x1 = 4.397675;
+final double x0 = 19.52896;
 
 
 
@@ -208,7 +208,6 @@ void serialEvent(Serial myport) {
       
      
       graph.pushVal((int) map(inByte, 0, 1023, 0, height));  // Add Corresponding value to graph object
-
 
       myPort.write('A');                // Send a capital A to request new sensor readings:   
       serialCount = 0;                  // Reset serialCount:
